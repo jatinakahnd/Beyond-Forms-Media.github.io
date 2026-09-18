@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beyond Forms Media — Digital Growth &amp; Motion Studio</title>
+  <meta name="description" content="Beyond Forms Media is a premier digital growth agency specializing in high-retention video systems and 3D motion design for category leaders." />
+
+  <!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carbon: '#09090A',
+            surface: '#111113',
+            'surface-elevated': '#161619',
+            ivory: '#F4F4F0',
+            emerald: '#10B981',
+            'studio-gray': '#8E8E93',
+            lavender: '#DBE8FB',
+            ink: '#140018',
+          },
+          fontFamily: {
+            sans: ['"Space Grotesk"', '"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          animation: {
+            'marquee': 'marquee 35s linear infinite',
+            'pulse-dot': 'pulse-dot 2s ease-in-out infinite',
+            'eq-1': 'eq 1s ease-in-out infinite alternate',
+            'eq-2': 'eq 1.2s ease-in-out infinite 0.2s alternate',
+            'eq-3': 'eq 0.8s ease-in-out infinite 0.4s alternate',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' },
+            },
+            'pulse-dot': {
+              '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+              '50%': { opacity: '0.4', transform: 'scale(1.4)' },
+            },
+            eq: {
+              '0%': { height: '4px' },
+              '100%': { height: '14px' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React 18 & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel Standalone for JSX in Browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      background-color: #09090A;
+      color: #F4F4F0;
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    ::selection {
+      background: rgba(16, 185, 129, 0.3);
+      color: #F4F4F0;
+    }
+  </style>
+</head>
+<body class="bg-carbon text-ivory antialiased selection:bg-emerald/30 selection:text-ivory">
+  <div id="root"></div>
+
+  <!-- React Application Logic -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    /* ═══════════════════════════════════════════════
+       PORTFOLIO DATA (24 PRODUCTIONS & HOOKS)
+       ═══════════════════════════════════════════════ */
+    const portfolioData = [
+      // 1. Long-Form Video Essays (16:9)
+      {
+        id: 'lf-1',
+        title: 'The Smartphone Addiction & Dopamine Trap',
+        category: 'longform',
+        type: 'Documentary & Retention Editing',
+        aspect: '16:9',
+        duration: '00:14:32',
+        badge: 'FILM ESSAY',
+        metrics: '+74% Avg Watch Duration',
+        description: 'In-depth documentary essay dissecting digital dopamine loops and smartphone dependency, engineered with custom screen mockups, kinetic motion, and immersive SFX foley.',
+        deliverables: ['Custom Device Mockups', 'Sound Foley', 'Kinetic Motion', 'Color Grading'],
+        videoUrl: 'https://drive.google.com/file/d/1-Ffiw3-ucZby5T3uWzg2g1Ku6lowbCB0/preview',
+        image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Video Essay', 'Screen Addiction', 'Device HUDs']
+      },
+      {
+        id: 'lf-2',
+        title: 'The 1989 Credit Score & Financial System Illusion',
+        category: 'longform',
+        type: 'Financial Documentary & Archival Motion',
+        aspect: '16:9',
+        duration: '00:18:10',
+        badge: 'FINANCIAL DOC',
+        metrics: '1.8M Organic Views',
+        description: 'A deep-dive investigation into the origins of modern credit scoring and financial traps, utilizing textured paper collages, archival document animation, and rhythmic sound design.',
+        deliverables: ['Paper Collage Animation', 'Archival Restoration', 'Foley SFX', 'Pacing Architecture'],
+        videoUrl: 'https://drive.google.com/file/d/1Krz0jH8d1NGlSmToJjmOHnW5oyvp6MUy/preview',
+        image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Financial Essay', 'Paper Collage', 'Archival Motion']
+      },
+      {
+        id: 'lf-3',
+        title: 'The Male Loneliness Epidemic & Modern Isolation',
+        category: 'longform',
+        type: 'Data Essay & Narrative Documentary',
+        aspect: '16:9',
+        duration: '00:16:45',
+        badge: 'DATA ESSAY',
+        metrics: '92% Retention Spike',
+        description: 'Comprehensive documentary analysis exploring modern loneliness and social isolation, driven by kinetic data visualization, textured infographics, and cinematic narrative pacing.',
+        deliverables: ['Infographic Maps', 'Kinetic Data Viz', 'Cinematic Atmosphere', 'Dynamic Subtitles'],
+        videoUrl: 'https://drive.google.com/file/d/1rEXVQbB_sc4Ry0R4qG2wSHhZTFc51SVq/preview',
+        image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Documentary', 'Infographics', 'Data Viz']
+      },
+      {
+        id: 'lf-4',
+        title: 'The Psychology of Modern Social Engineering',
+        category: 'longform',
+        type: 'Psychology Documentary',
+        aspect: '16:9',
+        duration: '00:12:55',
+        badge: 'PSYCHOLOGY DOC',
+        metrics: 'Featured Keynote Reel',
+        description: 'High-retention video essay investigating cognitive biases and behavioral manipulation, crafted with vintage film overlays, motion graphics, and atmospheric audio mixing.',
+        deliverables: ['Archival Film Overlays', 'Behavioral Visualizers', 'SFX Foley Mixing', 'Pacing Curves'],
+        videoUrl: 'https://drive.google.com/file/d/1lXz90HgUl0YKYhbFKplPQLd85kZi0LJJ/preview',
+        image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Psychology Doc', 'Archival Film', 'Kinetic Motion']
+      },
+
+      // 2. Short-Form Reels & Shorts (9:16 Vertical)
+      {
+        id: 'sf-1',
+        title: 'Podcast Hook: Money Mindset & Financial Psychology',
+        category: 'shortform',
+        type: 'Viral Short-Form & Animated Captions',
+        aspect: '9:16',
+        duration: '00:00:54',
+        badge: 'PODCAST REEL',
+        metrics: '3.4M Views Generated',
+        description: 'High-retention podcast cut featuring dynamic animated captions, money icon pop-ups, multi-cam rhythm, and punchy audio transients.',
+        deliverables: ['Multi-Cam Switching', 'Animated Subtitles', 'Sound Accents'],
+        videoUrl: 'https://drive.google.com/file/d/1w95DhFkt3pUigZE7VfQZQ9GEJgdym6R8/preview',
+        tags: ['Podcast', 'Subtitles', 'Viral Hook']
+      },
+      {
+        id: 'sf-2',
+        title: 'The Scholarship Trap: Student Loans vs Debt Reality',
+        category: 'shortform',
+        type: 'Viral Breakdown & Paper Motion',
+        aspect: '9:16',
+        duration: '00:00:48',
+        badge: 'VIRAL BREAKDOWN',
+        metrics: '1.2M Views Generated',
+        description: 'Viral financial breakdown contrasting student debt vs scholarships with tactile paper textures, stamps, and energetic stop-motion rhythm.',
+        deliverables: ['Paper Stop-Motion', 'Tactile SFX', 'Typography Hooks'],
+        videoUrl: 'https://drive.google.com/file/d/1ZYnnU1axZVnxV0rn5nnl2bSerzOmarDk/preview',
+        tags: ['Student Debt', 'Paper SFX', 'Viral Breakdown']
+      },
+      {
+        id: 'sf-3',
+        title: 'The Attention Economy: Focus as a Superpower',
+        category: 'shortform',
+        type: 'Mixed Media Cutout & Color Isolation',
+        aspect: '9:16',
+        duration: '00:00:58',
+        badge: 'MIXED MEDIA',
+        metrics: '840K Views Generated',
+        description: 'Visual-rich short exploring human focus, featuring mixed-media cutout animations, selective color grading, and speed ramps.',
+        deliverables: ['Mixed Media Collage', 'Color Isolation', 'Speed Ramps'],
+        videoUrl: 'https://drive.google.com/file/d/1bqB-FQE6ZMdVA1YfQ_U4BNrkX_7jLI-S/preview',
+        tags: ['Mixed Media', 'Cutout', 'Color Isolate']
+      },
+      {
+        id: 'sf-4',
+        title: 'Social Catfish: Celebrity Impersonation Scam Breakdown',
+        category: 'shortform',
+        type: 'True Crime & Cyber Investigation',
+        aspect: '9:16',
+        duration: '00:00:52',
+        badge: 'INVESTIGATION',
+        metrics: '2.1M Views Generated',
+        description: 'Engaging cyber-investigation breakdown of celebrity romance scams with character callouts, evidence markers, and visual timelines.',
+        deliverables: ['Timeline Animation', 'Evidence Callouts', 'Audio Foley'],
+        videoUrl: 'https://drive.google.com/file/d/1JlBjFKMNg80bRNpCu1LF9T6fI8l3QxZ8/preview',
+        tags: ['Investigation', 'True Crime', 'Case Study']
+      },
+      {
+        id: 'sf-5',
+        title: 'Studio Creator Breakdown: Authority & Storytelling',
+        category: 'shortform',
+        type: 'Talking Head & High Watch Time Pacing',
+        aspect: '9:16',
+        duration: '00:00:45',
+        badge: 'TALKING HEAD',
+        metrics: '95% Hook Hold Benchmark',
+        description: 'Dynamic digital zoom framing, broadcast audio polish, and on-screen text emphasis designed for ultra-high watch time retention.',
+        deliverables: ['Dynamic Digital Zoom', 'Broadcast Audio Mastering', 'Keyframe Tracking'],
+        videoUrl: 'https://drive.google.com/file/d/1_NIZZR-mmizC-0UFF6Ag0jy6PcbUUm8W/preview',
+        tags: ['Talking Head', 'Studio Cut', 'Dynamic Zoom']
+      },
+      {
+        id: 'sf-6',
+        title: 'Cyber Scam Alert: The Pig Butchering Fraud Scheme',
+        category: 'shortform',
+        type: '3D Cyber FX & High-Stakes Explainer',
+        aspect: '9:16',
+        duration: '00:00:50',
+        badge: '3D CYBER FX',
+        metrics: '1.7M Views Generated',
+        description: 'High-retention cyber fraud explainer combining 3D character animation, glowing alert badges, dramatic lighting, and kinetic subtitles.',
+        deliverables: ['3D Character Elements', 'HUD Alert Graphics', 'Sound FX Risers'],
+        videoUrl: 'https://drive.google.com/file/d/1qfVJl0m97KwhKK1R6Q1-7Gu4sPTTCeIz/preview',
+        tags: ['3D Motion', 'Explainer', 'Cyber FX']
+      },
+      {
+        id: 'sf-7',
+        title: 'Behavioral Triggers & The Consumer Habit Loop',
+        category: 'shortform',
+        type: 'Consumer Psychology & Fast-Paced Edits',
+        aspect: '9:16',
+        duration: '00:00:55',
+        badge: 'FAST-PACED',
+        metrics: '980K Views Generated',
+        description: 'Fast-paced short analyzing consumer habits and psychology with speed ramps, kinetic typography, graphic matches, and SFX risers.',
+        deliverables: ['Graphic Match Cuts', 'Kinetic Typography', 'Speed Ramps'],
+        videoUrl: 'https://drive.google.com/file/d/1bc7BuXNzQP_2yIEjADy5m9iUZ3obhDCd/preview',
+        tags: ['Habit Loop', 'Fast Cuts', 'Kinetic Text']
+      },
+
+      // 3. Motion Graphics & Cash Cow (16:9)
+      {
+        id: 'mg-1',
+        title: 'Faceless True Crime: Citizen Rights & Police Auditing',
+        category: 'motion',
+        type: 'Faceless YouTube Documentary & HUD Tracking',
+        aspect: '16:9',
+        duration: '00:11:20',
+        badge: 'FACELESS DOC',
+        metrics: '60 FPS AE Comp Master',
+        description: 'High-performing faceless documentary edit analyzing citizen-police legal encounters, featuring custom HUD callouts, bodycam stabilization, and narrative pacing.',
+        deliverables: ['Custom HUD Callouts', 'Mocha Tracking', 'Bodycam Restoration'],
+        videoUrl: 'https://drive.google.com/file/d/1UdEiRKOLEvqlGJBLxIBjCylW4leBSKLj/preview',
+        image: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Faceless Doc', 'HUD Overlays', 'Mocha AE']
+      },
+      {
+        id: 'mg-2',
+        title: 'Investigative Case Doc: Bodycam & Courtroom Analysis',
+        category: 'motion',
+        type: 'Investigative Documentary & Map Tracking',
+        aspect: '16:9',
+        duration: '00:13:40',
+        badge: 'INVESTIGATIVE DOC',
+        metrics: 'Mocha AE Pin Master',
+        description: 'Viral investigative case breakdown engineered for high view duration, utilizing motion tracking, 3D map animations, evidence overlays, and intense soundscapes.',
+        deliverables: ['3D Map Animation', 'Courtroom Reconstructions', 'Evidence Overlays'],
+        videoUrl: 'https://drive.google.com/file/d/1JqKUJp3p9BW3B8DtlQ3ekQNiRIRI9ngH/preview',
+        image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Motion Tracking', 'Infographic Maps', 'Sound Design']
+      },
+      {
+        id: 'mg-3',
+        title: 'Kinetic Explainer: Visual Data & Dynamic Transitions',
+        category: 'motion',
+        type: 'Vector Motion Graphics & 2D Animation',
+        aspect: '16:9',
+        duration: '00:09:15',
+        badge: 'KINETIC EXPLAINER',
+        metrics: 'Vector Math Precision',
+        description: 'Dynamic motion graphic explainer transforming complex concepts into fluid visual storytelling with vector animations, seamless transitions, and clean typography.',
+        deliverables: ['Vector Animation', 'Seamless Match Cuts', 'Custom Diagrams'],
+        videoUrl: 'https://drive.google.com/file/d/1fLo8qn8q_hrTAv1KTLsh8WoNmC8LFDN9/preview',
+        image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&auto=format&fit=crop&q=80',
+        tags: ['After Effects', 'Diagram Motion', 'Vector Graphics']
+      },
+      {
+        id: 'mg-4',
+        title: 'Faceless Educational Documentary & 2D Motion HUDs',
+        category: 'motion',
+        type: 'Cash Cow YouTube System & 2D HUDs',
+        aspect: '16:9',
+        duration: '00:15:02',
+        badge: '2D MOTION HUD',
+        metrics: 'Cash Cow System Benchmark',
+        description: 'Faceless YouTube documentary designed for scale and monetization, combining 2D animated illustrations, fast-paced B-roll matching, and immersive Foley sound design.',
+        deliverables: ['2D Character Motion', 'B-Roll Rhythm Mapping', 'Sound Polish'],
+        videoUrl: 'https://drive.google.com/file/d/1HjJGEDE1EgKWtV2G9SkWsp6jgjQ7FO3a/preview',
+        image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&auto=format&fit=crop&q=80',
+        tags: ['2D Animation', 'Cash Cow', 'Sound Polish']
+      },
+
+      // 4. Product Promos & Commercials (9:16 Vertical)
+      {
+        id: 'pr-1',
+        title: 'BHQ Meal Box: 3D Product Promo & Subscription Commercial',
+        category: 'promo',
+        type: '3D Product Visualization & Direct Response Ad',
+        aspect: '9:16',
+        duration: '00:00:30',
+        badge: '3D COMMERCIAL',
+        metrics: 'High-Converting Direct Response',
+        description: 'High-impact food subscription commercial featuring 3D meal box packaging animation, punchy typographic beats, and commercial audio mastering.',
+        deliverables: ['3D Box Modeling', 'Liquid Simulation', 'Commercial Grade Color'],
+        videoUrl: 'https://drive.google.com/file/d/12eogRAu7t6wAm4fN7z5zd767-jqrbRgb/preview',
+        tags: ['3D Product', 'Commercial', 'Direct Response']
+      },
+      {
+        id: 'pr-2',
+        title: 'Social Catfish 100K: Brand Milestone Celebration Motion',
+        category: 'promo',
+        type: 'Brand Milestone & Kinetic Typography',
+        aspect: '9:16',
+        duration: '00:00:35',
+        badge: 'MILESTONE',
+        metrics: '100K Creator Milestone',
+        description: 'Dynamic 100,000 subscriber celebration motion piece for Social Catfish with energetic kinetic typography, metallic 3D badges, and festive sound design.',
+        deliverables: ['3D Milestone Plaque', 'Kinetic Type Rhythms', 'Confetti Dynamics'],
+        videoUrl: 'https://drive.google.com/file/d/1oiqe-4ckHwzuAEMgRnFslHJhmoIYubMJ/preview',
+        tags: ['Milestone', 'Motion Graphics', 'Celebration']
+      },
+      {
+        id: 'pr-3',
+        title: 'Digital Platform Showcase: SaaS Feature & Conversion Ad',
+        category: 'promo',
+        type: 'SaaS Platform Showcase & UI Animation',
+        aspect: '9:16',
+        duration: '00:00:40',
+        badge: 'SAAS PROMO',
+        metrics: 'SaaS Acquisition Showcase',
+        description: 'Direct-response digital product promo highlighting core platform features with sleek UI animations, isometric screen projections, and high-converting pacing.',
+        deliverables: ['Isometric UI Mockups', 'Cursor Interactions', 'Product Value Hooks'],
+        videoUrl: 'https://drive.google.com/file/d/1Cpsbjfn1Qn652b303PMLN0h33ut-j6-a/preview',
+        tags: ['SaaS Promo', 'UI Motion', 'Conversion Ad']
+      },
+
+      // 5. High-CTR Thumbnails & Hook Designs (16:9)
+      {
+        id: 'th-1',
+        title: 'No Friends? — Psychological Retainer Hook',
+        category: 'thumbnails',
+        type: 'Photoshop Composition & Color Wash',
+        aspect: '16:9',
+        badge: 'HIGH CTR HOOK',
+        metrics: '14.2% Click-Through Rate',
+        description: 'Monochromatic red color wash, motion blurred crowd dynamics, and glitch text overlay engineered to stop the scroll instantly.',
+        deliverables: ['Photoshop Compositing', 'Glitch Art', 'Color Grading'],
+        image: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Color Wash', 'Glitch FX', 'Retention']
+      },
+      {
+        id: 'th-2',
+        title: 'The $20/hr Trap — High-Impact Finance Hook',
+        category: 'thumbnails',
+        type: 'Typography & Texture Art Hook',
+        aspect: '16:9',
+        badge: 'HIGH CTR HOOK',
+        metrics: '16.8% Click-Through Rate',
+        description: 'Top-down bird’s-eye perspective, layered past-due invoice textures, and bold financial typography creating immediate curiosity.',
+        deliverables: ['Top-Down Art Direction', 'Texture Compositing', 'Contrast Punch'],
+        image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Typography', 'Texture Art', 'Finance']
+      },
+      {
+        id: 'th-3',
+        title: 'The Isolation Epidemic — Cinema Auditorium Concept',
+        category: 'thumbnails',
+        type: 'Theatrical Spotlight & Atmosphere Hook',
+        aspect: '16:9',
+        badge: 'HIGH CTR HOOK',
+        metrics: '13.9% Click-Through Rate',
+        description: 'Atmospheric theatrical auditorium framing, harsh spotlight glow, and cinematic isolation narrative conveying scale and vulnerability.',
+        deliverables: ['Atmospheric Lighting', 'Ray Compositing', 'Cinematic Depth'],
+        image: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Cinema Light', 'Perspective', 'Mood']
+      },
+      {
+        id: 'th-4',
+        title: 'Screen Reflection Concept — Macro Eye Detail',
+        category: 'thumbnails',
+        type: 'Macro Lens Detail & 3D Layering',
+        aspect: '16:9',
+        badge: 'HIGH CTR HOOK',
+        metrics: '15.1% Click-Through Rate',
+        description: 'Macro lens eye reflection detail with floating 3D app widgets, subtle rim lighting, and intense biometric framing.',
+        deliverables: ['Macro Detail Composite', '3D App Overlay', 'Rim Glow'],
+        image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Macro FX', 'Lens Glow', '3D Layers']
+      },
+      {
+        id: 'th-5',
+        title: 'Universities / Student Loan Scam — Burning Paper',
+        category: 'thumbnails',
+        type: 'Fire Lighting & Burning Paper Composite',
+        aspect: '16:9',
+        badge: 'HIGH CTR HOOK',
+        metrics: '17.4% Click-Through Rate',
+        description: 'High-contrast fire lighting, documentary emotional hook, and multi-layer burning paper composite radiating tension.',
+        deliverables: ['Fire Dynamics', 'Ember Compositing', 'Paper Tear Texture'],
+        image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Photoshop', 'Lighting', 'Compositing']
+      },
+      {
+        id: 'th-6',
+        title: 'The Addiction Trap — Neon Desk Props & Phone Glow',
+        category: 'thumbnails',
+        type: 'Neon Outline Typography & Desk Scene',
+        aspect: '16:9',
+        badge: 'HIGH CTR HOOK',
+        metrics: '14.7% Click-Through Rate',
+        description: 'Neon outline typography, desk props with snack wrappers and coffee cups, 3D social icons, and realistic smartphone screen glow.',
+        deliverables: ['Neon Bloom FX', 'Prop Set Dressing', 'Screen Glow Lighting'],
+        image: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=1200&auto=format&fit=crop&q=80',
+        tags: ['Neon Type', '3D Props', 'Phone Glow']
+      }
+    ];
+
+    const categories = [
+      { id: 'all', label: 'All Work', count: 24 },
+      { id: 'longform', label: 'Long-Form', count: 4 },
+      { id: 'shortform', label: 'Short-Form', count: 7 },
+      { id: 'motion', label: 'Motion', count: 4 },
+      { id: 'promo', label: 'Commercials', count: 3 },
+      { id: 'thumbnails', label: 'Thumbnails', count: 6 }
+    ];
+
+    /* ═══════════════════════════════════════════════
+       HEADER COMPONENT
+       ═══════════════════════════════════════════════ */
+    function Header({ onBookCall }) {
+      const [showTopNav, setShowTopNav] = useState(false);
+      const [isScrolled, setIsScrolled] = useState(false);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          setIsScrolled(window.scrollY > 200);
+          const bottomNav = document.getElementById('hero-bottom-nav');
+          if (bottomNav) {
+            const rect = bottomNav.getBoundingClientRect();
+            setShowTopNav(rect.bottom <= 0);
+          } else {
+            setShowTopNav(window.scrollY > 600);
+          }
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const navLinks = [
+        { id: 'about', name: 'About', href: '#about' },
+        { id: 'work', name: 'Work', href: '#work' },
+        { id: 'services', name: 'Services', href: '#services' },
+        { id: 'framework', name: 'Framework', href: '#framework' },
+        { id: 'faq', name: 'FAQ', href: '#faq' },
+      ];
+
+      return (
+        <header className="fixed inset-x-0 top-0 z-50 pointer-events-none">
+          <div className="w-full flex items-center justify-between px-6 md:px-12 mt-4 md:mt-6 pointer-events-auto">
+            {/* Logo */}
+            <a href="#" className="flex items-center gap-2 group">
+              <span className="font-extrabold text-lg sm:text-xl tracking-tighter text-[#F4F4F0] group-hover:text-emerald transition-colors">
+                BEY<span className="text-emerald">▷</span>ND FORMS
+              </span>
+            </a>
+
+            {/* Top Navigation Capsule (Appears only when bottom hero nav is out of sight) */}
+            <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden md:flex items-center justify-center">
+              <nav 
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full backdrop-blur-2xl border transition-all duration-300 pointer-events-auto shadow-2xl ${
+                  showTopNav ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 -translate-y-4 scale-95 pointer-events-none'
+                } bg-[#111113]/90 border-white/15 text-[#F4F4F0]`}
+              >
+                {navLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.href}
+                    className="relative px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 hover:bg-white/10"
+                  >
+                    <span>{link.name}</span>
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            {/* CTA Button */}
+            <button
+              onClick={onBookCall}
+              className="flex items-center gap-2 rounded-xl bg-[#F4F4F0] text-[#09090A] px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg hover:bg-emerald transition-all active:scale-95"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#09090A]" />
+              <span>Let's Talk ▷</span>
+            </button>
+          </div>
+        </header>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       HERO COMPONENT
+       ═══════════════════════════════════════════════ */
+    function Hero() {
+      const navLinks = [
+        { id: 'about', name: 'About', href: '#about' },
+        { id: 'work', name: 'Work', href: '#work' },
+        { id: 'services', name: 'Services', href: '#services' },
+        { id: 'framework', name: 'Framework', href: '#framework' },
+        { id: 'faq', name: 'FAQ', href: '#faq' },
+      ];
+
+      return (
+        <section id="hero" className="relative flex min-h-[90vh] flex-col items-center justify-between overflow-hidden pt-28 pb-8 md:pt-36 md:pb-10 bg-[#0E0E11] text-[#F4F4F0]">
+          {/* Ambient Blobs */}
+          <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center">
+            <div className="absolute w-[500px] h-[500px] rounded-full bg-emerald/10 blur-[120px]" />
+            <div className="absolute w-[450px] h-[450px] rounded-full bg-purple-600/10 blur-[130px] translate-x-32 -translate-y-12" />
+          </div>
+
+          {/* Hero Content */}
+          <div className="relative z-10 flex max-w-4xl flex-col items-center text-center px-4 my-auto">
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-4 py-1.5 text-xs font-semibold uppercase tracking-wider font-mono shadow-sm mb-6">
+              <span className="h-2 w-2 rounded-full bg-emerald animate-pulse-dot" />
+              <span>Digital Growth &amp; Motion Studio — Worldwide</span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-[clamp(2.75rem,7.5vw,7.5rem)] font-extrabold tracking-[-0.03em] leading-[0.95] text-[#F4F4F0]">
+              Engineered to retain.<br />
+              <span className="text-[#8E8E93]">Built to scale.</span>
+            </h1>
+
+            {/* Sub-paragraph */}
+            <p className="mt-6 max-w-2xl text-base sm:text-xl font-normal text-[#A1A1A8] leading-relaxed">
+              We architect high-retention video systems and 3D motion design for tier-one creators, tech founders, and modern media brands tired of ordinary content.
+            </p>
+          </div>
+
+          {/* Bottom Navigation Status Bar */}
+          <div id="hero-bottom-bar" className="relative z-10 w-full pt-8 flex items-center justify-between px-6 md:px-12 border-t border-white/5">
+            {/* Scarcity */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase font-mono">
+              <span className="h-2 w-2 rounded-full bg-emerald animate-pulse-dot" />
+              <span>2 SPOTS OPEN FOR Q4</span>
+            </div>
+
+            {/* Bottom Nav Capsule (Mathematical Center) */}
+            <div className="hidden md:flex absolute left-1/2 -translate-x-1/2">
+              <nav id="hero-bottom-nav" className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-md shadow-sm">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.href}
+                    className={`relative px-4 py-1.5 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 ${
+                      link.id === 'about' ? 'bg-white/15 text-[#F4F4F0]' : 'text-[#8E8E93] hover:text-[#F4F4F0]'
+                    }`}
+                  >
+                    {link.name}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            {/* Scroll down */}
+            <a href="#about" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase font-mono hover:text-emerald transition-colors">
+              <span>Scroll down ↓</span>
+            </a>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       ABOUT & METRICS SECTION
+       ═══════════════════════════════════════════════ */
+    function AboutSection({ onBookCall }) {
+      return (
+        <section id="about" className="py-20 md:py-28 px-6 md:px-12 border-t border-white/[0.08] bg-[#111113]">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-emerald font-semibold">▷ 00 / ABOUT STUDIO</span>
+                <h2 className="mt-4 text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-[#F4F4F0]">
+                  Content that commands attention. Systems that compound.
+                </h2>
+                <p className="mt-6 text-base sm:text-lg text-[#A1A1A8] leading-relaxed">
+                  Most video editors just cut footage. We build proprietary retention architectures: sub-second pattern interrupts, custom sound foley, and 3D metaphors engineered for algorithmic watch time.
+                </p>
+                <div className="mt-8 flex items-center gap-4">
+                  <button onClick={onBookCall} className="rounded-xl bg-emerald text-carbon font-bold px-6 py-3 text-sm hover:bg-[#F4F4F0] transition-colors shadow-lg">
+                    Book a Strategy Session ▷
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
+                  <div className="text-3xl sm:text-4xl font-extrabold text-[#F4F4F0]">150M+</div>
+                  <div className="font-mono text-xs uppercase tracking-wider text-[#8E8E93] mt-1">Organic Views</div>
+                </div>
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
+                  <div className="text-3xl sm:text-4xl font-extrabold text-emerald">40+</div>
+                  <div className="font-mono text-xs uppercase tracking-wider text-[#8E8E93] mt-1">Creators Scaled</div>
+                </div>
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
+                  <div className="text-3xl sm:text-4xl font-extrabold text-[#F4F4F0]">94%</div>
+                  <div className="font-mono text-xs uppercase tracking-wider text-[#8E8E93] mt-1">Retention Benchmark</div>
+                </div>
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6">
+                  <div className="text-3xl sm:text-4xl font-extrabold text-purple-400">GLOBAL</div>
+                  <div className="font-mono text-xs uppercase tracking-wider text-[#8E8E93] mt-1">Client Roster</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       MARQUEE TICKER
+       ═══════════════════════════════════════════════ */
+    function Marquee() {
+      const items = [
+        'RETENTION VIDEO EDITING',
+        '3D MOTION GRAPHICS',
+        'YOUTUBE GROWTH SYSTEMS',
+        'CONTENT REPURPOSING ENGINE',
+        'DIRECT RESPONSE COMMERCIALS',
+        'ALGORITHMIC STORYTELLING'
+      ];
+
+      return (
+        <div className="py-6 border-y border-white/[0.08] bg-[#0E0E11] overflow-hidden whitespace-nowrap">
+          <div className="inline-flex animate-marquee">
+            {[...items, ...items, ...items].map((text, i) => (
+              <span key={i} className="inline-flex items-center mx-6 font-bold text-xl sm:text-2xl uppercase tracking-wider text-[#F4F4F0]">
+                <span>{text}</span>
+                <span className="text-emerald mx-6">▷</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       SELECTED WORK & FILTER ENGINE
+       ═══════════════════════════════════════════════ */
+    function SelectedWork({ onProjectClick }) {
+      const [activeCategory, setActiveCategory] = useState('all');
+
+      const filteredProjects = activeCategory === 'all'
+        ? portfolioData
+        : portfolioData.filter((p) => p.category === activeCategory);
+
+      return (
+        <section id="work" className="py-20 md:py-32 px-6 md:px-12 bg-[#09090A]">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pb-10 border-b border-white/[0.08]">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#8E8E93]">▷ 01 / SELECTED PRODUCTIONS</span>
+                <h2 className="mt-3 text-3xl sm:text-5xl font-bold tracking-tight text-[#F4F4F0]">
+                  Engineered to retain.<br />
+                  <span className="text-[#8E8E93]">Obsessed with watch time.</span>
+                </h2>
+              </div>
+              <div className="text-xs font-mono text-[#8E8E93]">
+                <span>Showing <strong className="text-[#F4F4F0]">{filteredProjects.length}</strong> master productions</span>
+              </div>
+            </div>
+
+            {/* Filter Capsule Bar */}
+            <div className="my-10 flex flex-col items-center justify-center">
+              <div className="max-w-full overflow-x-auto no-scrollbar py-1">
+                <nav className="inline-flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-full bg-[#111113] border border-white/[0.12] backdrop-blur-2xl shadow-2xl flex-nowrap">
+                  {categories.map((cat) => {
+                    const isActive = activeCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => setActiveCategory(cat.id)}
+                        className={`relative px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-2 whitespace-nowrap outline-none ${
+                          isActive ? 'bg-[#F4F4F0] text-[#09090A] shadow-md' : 'text-[#8E8E93] hover:text-[#F4F4F0] hover:bg-white/[0.05]'
+                        }`}
+                      >
+                        <span>{cat.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${isActive ? 'bg-[#09090A]/15 text-[#09090A]' : 'bg-white/10 text-[#8E8E93]'}`}>
+                          {cat.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+              <p className="mt-3 text-xs font-mono text-[#8E8E93]">Click any card to stream video in high-definition</p>
+            </div>
+
+            {/* Cards Grid */}
+            <div className={`w-full transition-opacity duration-300 ${
+              activeCategory === 'shortform' || activeCategory === 'promo'
+                ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+                : activeCategory === 'thumbnails'
+                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
+                : 'grid grid-cols-1 md:grid-cols-2 gap-8'
+            }`}>
+              {filteredProjects.map((project) => {
+                const isVerticalCard = project.aspect === '9:16';
+                const isThumbCard = project.category === 'thumbnails';
+
+                if (isVerticalCard) {
+                  return (
+                    <div
+                      key={project.id}
+                      onClick={() => onProjectClick(project)}
+                      className="group cursor-pointer relative aspect-[9/15] rounded-[1.5rem] bg-[#0E0E12] border border-white/[0.1] hover:border-emerald/50 overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-between p-5 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)]"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#181126]/60 via-[#0D0B14] to-[#09090B] pointer-events-none" />
+                      
+                      {/* Top Phone Bar */}
+                      <div className="relative z-10 w-full flex flex-col items-center">
+                        <div className="w-12 h-1 bg-white/15 rounded-full mb-3" />
+                        <div className="w-full flex items-center justify-between">
+                          <span className="px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[10px] font-mono font-semibold text-emerald">
+                            {project.badge}
+                          </span>
+                          <span className="font-mono text-[10px] text-white/70 bg-black/50 px-2 py-0.5 rounded border border-white/10">
+                            {project.duration || '60 FPS'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Center Play Button */}
+                      <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center">
+                        <div className="w-14 h-14 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl group-hover:scale-110 group-hover:bg-emerald group-hover:text-carbon transition-all duration-300">
+                          <span className="ml-1 font-bold text-lg">▶</span>
+                        </div>
+                        <span className="mt-3 font-mono text-[10px] text-emerald tracking-wider uppercase">Tap to stream reel</span>
+                      </div>
+
+                      {/* Bottom Info */}
+                      <div className="relative z-10 w-full pt-3 border-t border-white/[0.08]">
+                        <div className="flex items-center justify-between mb-1.5">
+                          <div className="flex items-end gap-1 h-3 text-emerald">
+                            <span className="w-0.5 h-1.5 bg-emerald rounded-full animate-eq-1" />
+                            <span className="w-0.5 h-3 bg-emerald rounded-full animate-eq-2" />
+                            <span className="w-0.5 h-2 bg-emerald rounded-full animate-eq-3" />
+                          </div>
+                          <span className="font-mono text-[10px] text-emerald font-semibold">{project.metrics}</span>
+                        </div>
+                        <h4 className="text-sm font-bold tracking-tight text-[#F4F4F0] truncate">{project.title}</h4>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    key={project.id}
+                    onClick={() => onProjectClick(project)}
+                    className="group cursor-pointer flex flex-col h-full rounded-[1.25rem] bg-[#111113] border border-white/[0.08] hover:border-emerald/50 overflow-hidden shadow-xl transition-all duration-300 hover:-translate-y-1.5"
+                  >
+                    <div className="relative w-full aspect-video overflow-hidden bg-black flex items-center justify-center">
+                      <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#09090A] via-[#09090A]/30 to-black/30" />
+                      
+                      <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
+                        <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono font-semibold text-emerald">
+                          {project.badge || 'PRODUCTION'}
+                        </span>
+                        {project.duration && (
+                          <span className="font-mono text-[10px] text-white/80 bg-black/70 px-2 py-0.5 rounded border border-white/10">
+                            {project.duration}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <div className="w-14 h-14 rounded-full bg-emerald/15 backdrop-blur-md border border-emerald/40 flex items-center justify-center text-emerald shadow-2xl group-hover:scale-110 group-hover:bg-emerald group-hover:text-carbon transition-all duration-300">
+                          <span className="ml-1 font-bold text-lg">▶</span>
+                        </div>
+                      </div>
+
+                      <div className="absolute bottom-3 inset-x-3 flex items-center justify-between z-10">
+                        <span className="rounded-full bg-[#F4F4F0] px-3 py-1 text-[11px] font-semibold text-[#09090A]">
+                          {isThumbCard ? 'Inspect 4K ↗' : 'Watch Master ▷'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col flex-1 p-6 bg-[#111113]">
+                      <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#F4F4F0] group-hover:text-emerald transition-colors line-clamp-1">
+                        {project.title}
+                      </h3>
+                      <p className="mt-2 text-xs sm:text-sm text-[#A1A1A8] line-clamp-2 leading-relaxed">{project.description}</p>
+                      <div className="mt-auto pt-4 flex items-center justify-between border-t border-white/[0.06]">
+                        <span className="text-xs font-mono font-semibold text-emerald">{project.metrics}</span>
+                        <span className="text-[11px] font-mono text-[#8E8E93]">Case Study ↗</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       INTERACTIVE VIDEO & LIGHTBOX MODAL
+       ═══════════════════════════════════════════════ */
+    function ProjectModal({ project, isOpen, onClose }) {
+      useEffect(() => {
+        if (isOpen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+      }, [isOpen]);
+
+      if (!isOpen || !project) return null;
+
+      const isVertical = project.aspect === '9:16';
+      const isThumbnail = project.category === 'thumbnails' || !project.videoUrl;
+      const driveViewUrl = project.videoUrl ? project.videoUrl.replace('/preview', '/view') : null;
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-carbon/90 backdrop-blur-xl" onClick={onClose} />
+
+          {/* Modal Container */}
+          <div className={`relative z-10 w-full overflow-hidden rounded-3xl bg-[#111113] border border-white/10 shadow-2xl my-auto ${isVertical ? 'max-w-4xl' : 'max-w-5xl'}`}>
+            {/* Top Bar */}
+            <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-4 bg-[#141417]">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-emerald font-semibold">{project.badge || 'Production'}</span>
+                <h3 className="font-bold text-base sm:text-lg text-[#F4F4F0] truncate">{project.title}</h3>
+              </div>
+              <div className="flex items-center gap-3">
+                {driveViewUrl && (
+                  <a href={driveViewUrl} target="_blank" rel="noreferrer" className="hidden sm:inline-block px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-[#8E8E93] hover:text-[#F4F4F0]">
+                    Full Drive ↗
+                  </a>
+                )}
+                <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className={`grid grid-cols-1 ${isVertical ? 'lg:grid-cols-[1fr_1.1fr]' : 'lg:grid-cols-[1.5fr_1fr]'}`}>
+              {/* Media Preview */}
+              <div className="relative bg-black flex items-center justify-center p-4 sm:p-6 min-h-[300px]">
+                {isThumbnail ? (
+                  <img src={project.image} alt={project.title} className="w-full aspect-video rounded-xl object-cover border border-white/10" />
+                ) : isVertical ? (
+                  <div className="relative w-full max-w-[300px] aspect-[9/16] rounded-2xl overflow-hidden border-4 border-[#222226] bg-black shadow-2xl">
+                    <iframe src={project.videoUrl} title={project.title} className="w-full h-full border-0" allow="autoplay; fullscreen" />
+                  </div>
+                ) : (
+                  <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black">
+                    <iframe src={project.videoUrl} title={project.title} className="w-full h-full border-0" allow="autoplay; fullscreen" />
+                  </div>
+                )}
+              </div>
+
+              {/* Sidebar Info */}
+              <div className="p-6 sm:p-8 bg-[#111113] border-t lg:border-t-0 lg:border-l border-white/[0.08] flex flex-col justify-between">
+                <div>
+                  <span className="px-3 py-1 rounded-full bg-emerald/10 border border-emerald/20 text-xs font-mono text-emerald font-semibold">
+                    {project.type}
+                  </span>
+                  <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-[#F4F4F0]">{project.title}</h2>
+                  <p className="mt-3 text-sm sm:text-base text-[#A1A1A8] leading-relaxed">{project.description}</p>
+                  
+                  <div className="mt-6 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+                    <div className="font-mono text-xs uppercase text-[#8E8E93]">Documented Impact</div>
+                    <div className="mt-1 text-xl font-bold text-emerald">{project.metrics}</div>
+                  </div>
+
+                  {project.deliverables && (
+                    <div className="mt-6">
+                      <div className="font-mono text-xs uppercase text-[#8E8E93] mb-2">Deliverables</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.deliverables.map((item, i) => (
+                          <span key={i} className="px-2.5 py-1 rounded border border-white/10 bg-white/5 text-xs font-mono text-white/80">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                  <span className="font-mono text-xs text-[#8E8E93]">Beyond Forms Media</span>
+                  {driveViewUrl && (
+                    <a href={driveViewUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-emerald hover:underline">
+                      Open in Drive ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       SERVICES SECTION
+       ═══════════════════════════════════════════════ */
+    function Services() {
+      const services = [
+        { num: "01", title: "Short-Form Retention Editing", desc: "Fast-paced, pattern-interrupt vertical cuts engineered for 120%+ average view duration on Reels, Shorts, and TikTok." },
+        { num: "02", title: "Long-Form Video Essays & Documentaries", desc: "Cinematic pacing, archival restorations, and custom sound design that keep viewers watching 20-minute masterclasses." },
+        { num: "03", title: "2D & 3D Motion Design", desc: "Custom visual metaphors, 3D Blender product models, and isometric UI animations that set your brand apart." },
+        { num: "04", title: "High-CTR Hook & Thumbnail Architecture", desc: "Psychological framing, color wash theory, and Photoshop composites engineered for 14%+ click-through rates." },
+      ];
+
+      return (
+        <section id="services" className="py-20 md:py-28 px-6 md:px-12 bg-[#0E0E11] border-t border-white/[0.08]">
+          <div className="max-w-7xl mx-auto">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#8E8E93]">▷ 02 / SERVICES</span>
+            <h2 className="mt-3 text-3xl sm:text-5xl font-bold tracking-tight text-[#F4F4F0]">Repeatable content infrastructure.</h2>
+            
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {services.map((s, i) => (
+                <div key={i} className="rounded-2xl border border-white/[0.08] bg-[#111113] p-8 hover:border-emerald/40 transition-all">
+                  <span className="font-mono text-emerald font-bold text-sm">{s.num}</span>
+                  <h3 className="mt-3 text-xl font-bold text-[#F4F4F0]">{s.title}</h3>
+                  <p className="mt-2 text-sm text-[#A1A1A8] leading-relaxed">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ */
+    function Footer() {
+      const copyEmail = () => {
+        navigator.clipboard.writeText("hello@beyondformsmedia.com");
+        alert("Email copied to clipboard: hello@beyondformsmedia.com");
+      };
+
+      return (
+        <footer className="py-20 px-6 md:px-12 bg-[#09090A] border-t border-white/[0.08]">
+          <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+            <span className="font-mono text-xs uppercase tracking-widest text-emerald font-semibold">BEYOND FORMS MEDIA</span>
+            <h2 className="mt-4 text-4xl sm:text-6xl font-extrabold tracking-tight text-[#F4F4F0]">Ready to build something iconic?</h2>
+            
+            <button onClick={copyEmail} className="mt-6 px-6 py-3 rounded-full border border-white/15 bg-white/5 font-mono text-sm text-[#F4F4F0] hover:bg-white/10 transition-colors">
+              hello@beyondformsmedia.com (Click to Copy)
+            </button>
+
+            <div className="mt-16 text-xs font-mono text-[#8E8E93]">
+              &copy; {new Date().getFullYear()} Beyond Forms Media. All rights reserved.
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       BOOKING MODAL
+       ═══════════════════════════════════════════════ */
+    function BookingModal({ isOpen, onClose }) {
+      if (!isOpen) return null;
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-carbon/90 backdrop-blur-xl">
+          <div className="relative w-full max-w-lg rounded-2xl bg-[#111113] border border-white/15 p-8 text-center shadow-2xl">
+            <button onClick={onClose} className="absolute top-4 right-4 text-white/60 hover:text-white">✕</button>
+            <span className="px-3 py-1 rounded-full bg-emerald/10 text-emerald font-mono text-xs font-semibold">STRATEGY SESSION</span>
+            <h3 className="mt-4 text-2xl font-bold text-[#F4F4F0]">Book a 30-Minute Architecture Call</h3>
+            <p className="mt-2 text-sm text-[#A1A1A8]">We will review your current retention curves, audit your pacing, and blueprint your content engine.</p>
+            <div className="mt-6 space-y-3">
+              <input type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald" />
+              <input type="email" placeholder="Your Work Email" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald" />
+              <input type="text" placeholder="Channel / Brand Link" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald" />
+              <button onClick={() => { alert("Thanks! We will be in touch within 24 hours."); onClose(); }} className="w-full py-3.5 rounded-xl bg-emerald text-carbon font-bold text-sm hover:bg-[#F4F4F0] transition-colors shadow-lg">
+                Submit Strategy Request ▷
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       ROOT APP
+       ═══════════════════════════════════════════════ */
+    function App() {
+      const [selectedProject, setSelectedProject] = useState(null);
+      const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+      return (
+        <div className="min-h-screen bg-[#09090A] text-[#F4F4F0]">
+          <Header onBookCall={() => setIsBookingOpen(true)} />
+          <Hero />
+          <AboutSection onBookCall={() => setIsBookingOpen(true)} />
+          <Marquee />
+          <SelectedWork onProjectClick={(p) => setSelectedProject(p)} />
+          <Services />
+          <Footer />
+
+          <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} />
+          <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
