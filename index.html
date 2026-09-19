@@ -773,4 +773,721 @@
                 </div>
                 <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 sm:p-6">
                   <div className="text-2xl sm:text-4xl font-extrabold text-[#F4F4F0]">94%</div>
-                  <div className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-
+                  <div className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-[#8E8E93] mt-1">Retention Goal</div>
+                </div>
+                <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 sm:p-6">
+                  <div className="text-2xl sm:text-4xl font-extrabold text-purple-400">GLOBAL</div>
+                  <div className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-[#8E8E93] mt-1">Client Roster</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       MARQUEE TICKER
+       ═══════════════════════════════════════════════ */
+    function Marquee() {
+      const items = [
+        'RETENTION VIDEO EDITING',
+        '3D MOTION GRAPHICS',
+        'YOUTUBE GROWTH SYSTEMS',
+        'CONTENT REPURPOSING ENGINE',
+        'DIRECT RESPONSE COMMERCIALS',
+        'ALGORITHMIC STORYTELLING'
+      ];
+
+      return (
+        <div className="py-5 sm:py-6 border-y border-white/[0.08] bg-[#0E0E11] overflow-hidden whitespace-nowrap">
+          <div className="inline-flex animate-marquee">
+            {[...items, ...items, ...items].map((text, i) => (
+              <span key={i} className="inline-flex items-center mx-4 sm:mx-6 font-bold text-lg sm:text-2xl uppercase tracking-wider text-[#F4F4F0]">
+                <span>{text}</span>
+                <span className="text-emerald mx-4 sm:mx-6">▷</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       SELECTED WORK & FILTER ENGINE (RESPONSIVE)
+       ═══════════════════════════════════════════════ */
+    function SelectedWork({ onProjectClick }) {
+      const [activeCategory, setActiveCategory] = useState('all');
+
+      const filteredProjects = activeCategory === 'all'
+        ? portfolioData
+        : portfolioData.filter((p) => p.category === activeCategory);
+
+      return (
+        <section id="work" className="py-20 md:py-32 px-4 sm:px-6 md:px-12 bg-[#09090A]">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/[0.08]">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#8E8E93]">▷ 01 / SELECTED PRODUCTIONS</span>
+                <h2 className="mt-3 text-2xl sm:text-5xl font-bold tracking-tight text-[#F4F4F0]">
+                  Engineered to retain.<br />
+                  <span className="text-[#8E8E93]">Obsessed with watch time.</span>
+                </h2>
+              </div>
+              <div className="text-xs font-mono text-[#8E8E93]">
+                <span>Showing <strong className="text-[#F4F4F0]">{filteredProjects.length}</strong> master productions</span>
+              </div>
+            </div>
+
+            {/* Filter Capsule Bar with Smooth Mobile Touch Scroll */}
+            <div className="my-8 sm:my-10 flex flex-col items-center justify-center">
+              <div className="w-full max-w-full overflow-x-auto no-scrollbar touch-scroll py-2 px-1">
+                <nav className="inline-flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-full bg-[#111113] border border-white/[0.12] backdrop-blur-2xl shadow-2xl flex-nowrap min-w-max mx-auto">
+                  {categories.map((cat) => {
+                    const isActive = activeCategory === cat.id;
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => setActiveCategory(cat.id)}
+                        className={`relative px-3.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap outline-none ${
+                          isActive ? 'bg-[#F4F4F0] text-[#09090A] shadow-md' : 'text-[#8E8E93] hover:text-[#F4F4F0] hover:bg-white/[0.05]'
+                        }`}
+                      >
+                        <span>{cat.label}</span>
+                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${isActive ? 'bg-[#09090A]/15 text-[#09090A]' : 'bg-white/10 text-[#8E8E93]'}`}>
+                          {cat.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+              <p className="mt-3 text-[11px] sm:text-xs font-mono text-[#8E8E93] text-center">
+                Swipe categories ↔ · Tap any card to stream video
+              </p>
+            </div>
+
+            {/* Cards Grid: 2 cols on mobile for vertical reels, 1 col for widescreen */}
+            <div className={`w-full transition-opacity duration-300 ${
+              activeCategory === 'shortform' || activeCategory === 'promo'
+                ? 'grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4'
+                : activeCategory === 'thumbnails'
+                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
+                : 'grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8'
+            }`}>
+              {filteredProjects.map((project) => {
+                const isVerticalCard = project.aspect === '9:16';
+                const isThumbCard = project.category === 'thumbnails';
+
+                // 1. VERTICAL REEL CARD (SMARTPHONE FEED AESTHETIC)
+                if (isVerticalCard) {
+                  return (
+                    <div
+                      key={project.id}
+                      onClick={() => onProjectClick(project)}
+                      className="group cursor-pointer relative aspect-[9/15] rounded-2xl sm:rounded-[1.5rem] bg-[#0E0E12] border border-white/[0.1] hover:border-emerald/50 overflow-hidden shadow-2xl transition-all duration-300 flex flex-col justify-between p-3.5 sm:p-5 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_rgba(16,185,129,0.15)]"
+                    >
+                      {/* Subtle image background with heavy dark gradient */}
+                      {project.image && (
+                        <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-500 pointer-events-none" />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-b from-[#181126]/80 via-[#0D0B14]/90 to-[#09090B] pointer-events-none" />
+                      
+                      {/* Top Phone Bar */}
+                      <div className="relative z-10 w-full flex flex-col items-center">
+                        <div className="w-8 sm:w-12 h-1 bg-white/20 rounded-full mb-2 sm:mb-3" />
+                        <div className="w-full flex items-center justify-between">
+                          <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-white/[0.06] border border-white/10 text-[9px] sm:text-[10px] font-mono font-semibold text-emerald">
+                            {project.badge}
+                          </span>
+                          <span className="font-mono text-[9px] sm:text-[10px] text-white/70 bg-black/50 px-1.5 py-0.5 rounded border border-white/10">
+                            {project.duration || '60 FPS'}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Center Play Button */}
+                      <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center py-2">
+                        <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl group-hover:scale-110 group-hover:bg-emerald group-hover:text-carbon transition-all duration-300">
+                          <span className="ml-0.5 font-bold text-sm sm:text-base">▶</span>
+                        </div>
+                        <span className="mt-2 font-mono text-[9px] sm:text-[10px] text-emerald tracking-wider uppercase">Stream reel</span>
+                      </div>
+
+                      {/* Bottom Info */}
+                      <div className="relative z-10 w-full pt-2 sm:pt-3 border-t border-white/[0.08]">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-end gap-0.5 h-2.5 sm:h-3 text-emerald">
+                            <span className="w-0.5 h-1 sm:h-1.5 bg-emerald rounded-full animate-eq-1" />
+                            <span className="w-0.5 h-2.5 sm:h-3 bg-emerald rounded-full animate-eq-2" />
+                            <span className="w-0.5 h-1.5 sm:h-2 bg-emerald rounded-full animate-eq-3" />
+                          </div>
+                          <span className="font-mono text-[9px] sm:text-[10px] text-emerald font-semibold truncate ml-1">{project.metrics}</span>
+                        </div>
+                        <h4 className="text-xs sm:text-sm font-bold tracking-tight text-[#F4F4F0] line-clamp-1">{project.title}</h4>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // 2. WIDESCREEN & THUMBNAIL CARDS
+                return (
+                  <div
+                    key={project.id}
+                    onClick={() => onProjectClick(project)}
+                    className="group cursor-pointer flex flex-col h-full rounded-2xl bg-[#111113] border border-white/[0.08] hover:border-emerald/50 overflow-hidden shadow-xl transition-all duration-300 hover:-translate-y-1.5"
+                  >
+                    <div className="relative w-full aspect-video overflow-hidden bg-black flex items-center justify-center">
+                      <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#09090A] via-[#09090A]/30 to-black/30" />
+                      
+                      <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
+                        <span className="px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10 text-[10px] font-mono font-semibold text-emerald">
+                          {project.badge || 'PRODUCTION'}
+                        </span>
+                        {project.duration && (
+                          <span className="font-mono text-[10px] text-white/80 bg-black/70 px-2 py-0.5 rounded border border-white/10">
+                            {project.duration}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <div className="w-12 sm:w-14 h-12 sm:h-14 rounded-full bg-emerald/15 backdrop-blur-md border border-emerald/40 flex items-center justify-center text-emerald shadow-2xl group-hover:scale-110 group-hover:bg-emerald group-hover:text-carbon transition-all duration-300">
+                          <span className="ml-1 font-bold text-base sm:text-lg">▶</span>
+                        </div>
+                      </div>
+
+                      <div className="absolute bottom-3 inset-x-3 flex items-center justify-between z-10">
+                        <span className="rounded-full bg-[#F4F4F0] px-3 py-1 text-[10px] sm:text-[11px] font-semibold text-[#09090A]">
+                          {isThumbCard ? 'Inspect 4K ↗' : 'Watch Master ▷'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col flex-1 p-5 sm:p-6 bg-[#111113]">
+                      <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#F4F4F0] group-hover:text-emerald transition-colors line-clamp-1">
+                        {project.title}
+                      </h3>
+                      <p className="mt-2 text-xs sm:text-sm text-[#A1A1A8] line-clamp-2 leading-relaxed">{project.description}</p>
+                      <div className="mt-auto pt-4 flex items-center justify-between border-t border-white/[0.06]">
+                        <span className="text-xs font-mono font-semibold text-emerald">{project.metrics}</span>
+                        <span className="text-[11px] font-mono text-[#8E8E93]">Case Study ↗</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       SERVICES SECTION
+       ═══════════════════════════════════════════════ */
+    function Services({ onBookCall }) {
+      const services = [
+        { num: "01", title: "Short-Form Retention Editing", desc: "Fast-paced, pattern-interrupt vertical cuts engineered for 120%+ average view duration on Reels, Shorts, and TikTok.", tags: ["Premiere", "Sound Design", "Captions"] },
+        { num: "02", title: "Long-Form Video Essays & Documentaries", desc: "Cinematic pacing, archival restorations, and custom sound design that keep viewers watching 20-minute masterclasses.", tags: ["Pacing Arc", "Archival SFX", "Storyboards"] },
+        { num: "03", title: "2D & 3D Motion Design", desc: "Custom visual metaphors, 3D Blender product models, and isometric UI animations that set your brand apart.", tags: ["After Effects", "Blender", "Cinema 4D"] },
+        { num: "04", title: "High-CTR Hook & Thumbnail Architecture", desc: "Psychological framing, color wash theory, and Photoshop composites engineered for 14%+ click-through rates.", tags: ["Photoshop", "CTR Testing", "Psychology"] },
+      ];
+
+      return (
+        <section id="services" className="py-20 md:py-28 px-4 sm:px-6 md:px-12 bg-[#0E0E11] border-t border-white/[0.08]">
+          <div className="max-w-7xl mx-auto">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#8E8E93]">▷ 02 / SERVICES</span>
+            <h2 className="mt-3 text-3xl sm:text-5xl font-bold tracking-tight text-[#F4F4F0]">Repeatable content infrastructure.</h2>
+            
+            <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {services.map((s, i) => (
+                <div key={i} className="relative rounded-2xl border border-white/[0.08] bg-[#111113] p-6 sm:p-8 hover:border-emerald/40 transition-all">
+                  <span className="font-mono text-emerald font-bold text-sm">{s.num}</span>
+                  <h3 className="mt-2 text-xl font-bold text-[#F4F4F0]">{s.title}</h3>
+                  <p className="mt-2 text-sm text-[#A1A1A8] leading-relaxed">{s.desc}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {s.tags.map((t, idx) => (
+                      <span key={idx} className="font-mono text-[10px] px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white/70">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 text-center">
+              <button onClick={onBookCall} className="rounded-xl bg-[#F4F4F0] text-carbon font-bold px-6 py-3 text-sm hover:bg-emerald transition-colors shadow-lg active:scale-95">
+                Discuss Your Production Stack ▷
+              </button>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       PRODUCTION SYSTEM / FRAMEWORK SECTION
+       ═══════════════════════════════════════════════ */
+    function ProductionSystem() {
+      const [openStep, setOpenStep] = useState(0);
+
+      const steps = [
+        { 
+          num: "01", 
+          title: "Ingestion & Script Diagnostics", 
+          desc: "We deconstruct your raw footage, script outlines, and content briefs through our retention framework. Every video starts with hook triage, pacing maps, and narrative sequencing before a single cut is made.", 
+          tools: ["Frame.io", "Notion", "Google Drive", "Descript"] 
+        },
+        { 
+          num: "02", 
+          title: "Creative Assembly & Sound Engineering", 
+          desc: "First cut assembly focused on emotional rhythm, micro-pacing, and Foley sound design. We score audio with custom risers, whooshes, and subtle background textures that prevent viewer fatigue and create forward momentum.", 
+          tools: ["Premiere Pro", "DaVinci Resolve", "Logic Pro", "Soundly"] 
+        },
+        { 
+          num: "03", 
+          title: "Motion Graphics & Retention Polishing", 
+          desc: "3D Blender visualizers, kinetic typography, visual metaphors, and retention heat-map adjustments. We engineer pattern interrupts every 3-5 seconds to flatten the drop-off curve and maximize completion rates.", 
+          tools: ["After Effects", "Blender", "Cinema 4D", "Mocha Pro"] 
+        },
+        { 
+          num: "04", 
+          title: "Final Delivery & Scaled Distribution", 
+          desc: "Frame-accurate review on Frame.io with version control. We export master files formatted and color-managed for YouTube 4K, Instagram Reels, TikTok, and LinkedIn, complete with CTR packaging recommendations.", 
+          tools: ["Frame.io", "Handbrake", "Vimeo Enterprise", "Dropbox"] 
+        }
+      ];
+
+      return (
+        <section id="framework" className="py-20 md:py-32 px-4 sm:px-6 md:px-12 bg-[#09090A] border-t border-white/[0.08] text-[#F4F4F0]">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start">
+            {/* Left Header */}
+            <div className="lg:sticky lg:top-28">
+              <span className="text-xs font-mono uppercase tracking-[0.25em] text-emerald font-semibold">▷ 03 / OUR FRAMEWORK</span>
+              <h2 className="mt-3 text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-[#F4F4F0]">How we work.</h2>
+              <p className="mt-4 text-base text-[#A1A1A8] leading-relaxed">
+                A battle-tested 4-step production framework refined over 150M+ views to guarantee predictable, repeatable algorithmic retention.
+              </p>
+            </div>
+
+            {/* Right Accordion */}
+            <div className="space-y-3">
+              {steps.map((step, idx) => {
+                const isOpen = openStep === idx;
+                return (
+                  <div key={idx} className="rounded-2xl border border-white/[0.08] bg-[#111113] overflow-hidden transition-all">
+                    <button
+                      onClick={() => setOpenStep(isOpen ? null : idx)}
+                      className="w-full p-5 sm:p-6 flex items-center justify-between text-left focus:outline-none"
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-emerald font-bold text-base">{step.num}</span>
+                        <h3 className="text-base sm:text-xl font-bold text-[#F4F4F0]">{step.title}</h3>
+                      </div>
+                      <span className="text-emerald font-bold text-xl">{isOpen ? '−' : '+'}</span>
+                    </button>
+                    {isOpen && (
+                      <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-white/5">
+                        <p className="text-sm sm:text-base text-[#A1A1A8] leading-relaxed">{step.desc}</p>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {step.tools.map((tool, tIdx) => (
+                            <span key={tIdx} className="font-mono text-xs px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white/80">
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       TESTIMONIALS SLIDER SECTION
+       ═══════════════════════════════════════════════ */
+    function Testimonials() {
+      const [activeIndex, setActiveIndex] = useState(0);
+
+      const testimonials = [
+        { 
+          quote: "Beyond Forms Media completely transformed our retention metrics. Our average view duration jumped from 3:20 to 8:45 on 15-minute documentary episodes, which triggered the algorithm to push us past 1.4 million subscribers.", 
+          name: "Alex Rivera", 
+          role: "Tech & Science Creator", 
+          stats: "1.4M Subscribers", 
+          initials: "AR" 
+        },
+        { 
+          quote: "The 3D motion design and kinetic storytelling they produce are on another level. Our AI product keynote generated 4x more inbound investor conversations than any pitch deck we have ever presented.", 
+          name: "Sarah Chen", 
+          role: "Founder & CEO, Lattice AI", 
+          stats: "$18M Series A", 
+          initials: "SC" 
+        },
+        { 
+          quote: "Their repurposing engine turned our weekly studio recording into 25+ viral high-retention reels every single week. We scaled by 280,000 followers in 90 days with zero extra effort from our team.", 
+          name: "Marcus Johnson", 
+          role: "Host, The Modern Founder", 
+          stats: "1.1M Monthly Downloads", 
+          initials: "MJ" 
+        }
+      ];
+
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setActiveIndex((cur) => (cur + 1) % testimonials.length);
+        }, 7000);
+        return () => clearInterval(timer);
+      }, [testimonials.length]);
+
+      const cur = testimonials[activeIndex];
+
+      return (
+        <section id="testimonials" className="py-20 md:py-28 px-4 sm:px-6 md:px-12 bg-[#0E0E11] border-t border-white/[0.08] text-[#F4F4F0]">
+          <div className="max-w-5xl mx-auto">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-8">
+              <span className="text-xs font-mono uppercase tracking-[0.25em] text-emerald font-semibold">▷ 04 / CLIENT PROOF</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setActiveIndex((activeIndex - 1 + testimonials.length) % testimonials.length)}
+                  className="w-9 h-9 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-white hover:bg-white/15 transition-colors"
+                  aria-label="Previous review"
+                >
+                  ←
+                </button>
+                <button
+                  onClick={() => setActiveIndex((activeIndex + 1) % testimonials.length)}
+                  className="w-9 h-9 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-white hover:bg-white/15 transition-colors"
+                  aria-label="Next review"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-[#111113] p-6 sm:p-10 md:p-14 shadow-2xl relative overflow-hidden">
+              <div className="text-emerald text-4xl sm:text-6xl font-serif leading-none mb-4">“</div>
+              <p className="text-lg sm:text-2xl font-medium leading-relaxed text-[#F4F4F0] min-h-[120px] sm:min-h-[140px]">
+                {cur.quote}
+              </p>
+
+              <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-emerald/15 border border-emerald/30 text-emerald font-bold font-mono flex items-center justify-center">
+                    {cur.initials}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base sm:text-lg text-[#F4F4F0]">{cur.name}</h4>
+                    <p className="text-xs sm:text-sm text-[#8E8E93]">{cur.role}</p>
+                  </div>
+                </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald/10 border border-emerald/20 text-emerald font-mono text-xs font-semibold w-fit">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse-dot" />
+                  <span>{cur.stats}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       FAQ ACCORDION SECTION
+       ═══════════════════════════════════════════════ */
+    function FAQ() {
+      const [openIndex, setOpenIndex] = useState(0);
+
+      const faqs = [
+        { 
+          q: "What turnaround times can we realistically expect?", 
+          a: "For short-form vertical reels (Shorts, Reels, TikToks), our standard delivery cadence is 48 to 72 hours per batch. Long-form YouTube documentaries operate on structured weekly sprints with milestone reviews on Frame.io." 
+        },
+        { 
+          q: "How do we submit assets and raw footage?", 
+          a: "We provision a dedicated, enterprise Frame.io workspace for frame-accurate timecode feedback. For raw footage (4K ProRes / BRAW / LOG), we set up high-speed cloud drive folders (Google Workspace or Dropbox)." 
+        },
+        { 
+          q: "Can we hire you strictly for video editing or motion graphics?", 
+          a: "Yes. While our most popular engagement is The Full Growth Partnership, we frequently work with brands and creators on standalone high-ticket video editing sprints or dedicated YouTube packaging overhauls." 
+        },
+        { 
+          q: "Do you work with international clients across different timezones?", 
+          a: "Yes — 100% of our production runs on an asynchronous workflow serving clients across North America, Europe, the Middle East, and Asia-Pacific with zero friction." 
+        },
+        { 
+          q: "How does the onboarding process work?", 
+          a: "Within 24 hours of our initial strategy call, your dedicated workspace is live. This includes Frame.io review access, your asset upload pipeline, and private communication channels with your lead editor." 
+        },
+        { 
+          q: "How do you measure and optimize audience retention?", 
+          a: "We analyze YouTube Studio and platform retention graphs frame-by-frame, diagnosing precise drop-off points. We then systematically restructure hooks and inject visual pattern interrupts to flatten the curve." 
+        }
+      ];
+
+      return (
+        <section id="faq" className="py-20 md:py-32 px-4 sm:px-6 md:px-12 bg-[#09090A] border-t border-white/[0.08] text-[#F4F4F0]">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 lg:gap-16 items-start">
+            <div className="lg:sticky lg:top-28">
+              <span className="text-xs font-mono uppercase tracking-[0.25em] text-emerald font-semibold">▷ 05 / QUESTIONS</span>
+              <h2 className="mt-3 text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-[#F4F4F0]">Good to know.</h2>
+              <p className="mt-4 text-base text-[#A1A1A8] leading-relaxed">
+                Clear answers regarding turnarounds, asset submissions, revisions, and engagement workflows.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {faqs.map((item, idx) => {
+                const isOpen = openIndex === idx;
+                return (
+                  <div key={idx} className="rounded-2xl border border-white/[0.08] bg-[#111113] overflow-hidden transition-all">
+                    <button
+                      onClick={() => setOpenIndex(isOpen ? null : idx)}
+                      className="w-full p-5 sm:p-6 flex items-center justify-between text-left focus:outline-none"
+                    >
+                      <h3 className="text-base sm:text-lg font-bold text-[#F4F4F0] pr-4">{item.q}</h3>
+                      <span className="text-emerald font-bold text-xl shrink-0">{isOpen ? '−' : '+'}</span>
+                    </button>
+                    {isOpen && (
+                      <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-white/5">
+                        <p className="text-sm sm:text-base text-[#A1A1A8] leading-relaxed">{item.a}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       INTERACTIVE VIDEO LIGHTBOX MODAL (MOBILE FIXED)
+       ═══════════════════════════════════════════════ */
+    function ProjectModal({ project, isOpen, onClose }) {
+      useEffect(() => {
+        if (isOpen) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+      }, [isOpen]);
+
+      if (!isOpen || !project) return null;
+
+      const isVertical = project.aspect === '9:16';
+      const isThumbnail = project.category === 'thumbnails' || !project.videoUrl;
+      const driveViewUrl = project.videoUrl ? project.videoUrl.replace('/preview', '/view') : null;
+
+      return (
+        <div className="fixed inset-0 z-[100] flex justify-center items-start md:items-center p-2 sm:p-4 md:p-8 overflow-y-auto py-6 sm:py-10">
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-[#09090A]/95 backdrop-blur-xl" onClick={onClose} />
+
+          {/* Modal Container */}
+          <div className={`relative z-10 w-full overflow-hidden rounded-2xl sm:rounded-3xl bg-[#111113] border border-white/10 shadow-2xl ${isVertical ? 'max-w-4xl' : 'max-w-5xl'}`}>
+            {/* Top Bar (Sticky so close button is ALWAYS pinned and visible on phone!) */}
+            <div className="sticky top-0 z-30 flex items-center justify-between border-b border-white/[0.08] px-4 sm:px-6 py-3.5 sm:py-4 bg-[#141417]/95 backdrop-blur-md">
+              <div className="max-w-[75%] sm:max-w-[80%]">
+                <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-emerald font-semibold">{project.badge || 'Production'}</span>
+                <h3 className="font-bold text-sm sm:text-lg text-[#F4F4F0] truncate">{project.title}</h3>
+              </div>
+              <div className="flex items-center gap-2">
+                {driveViewUrl && (
+                  <a href={driveViewUrl} target="_blank" rel="noreferrer" className="hidden sm:inline-block px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs font-mono text-[#8E8E93] hover:text-[#F4F4F0]">
+                    Drive ↗
+                  </a>
+                )}
+                <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 text-sm font-bold">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className={`grid grid-cols-1 ${isVertical ? 'lg:grid-cols-[1fr_1.1fr]' : 'lg:grid-cols-[1.5fr_1fr]'}`}>
+              {/* Media Preview Player */}
+              <div className="relative bg-black flex items-center justify-center p-3 sm:p-6 min-h-[260px] sm:min-h-[340px]">
+                {isThumbnail ? (
+                  <img src={project.image} alt={project.title} className="w-full aspect-video rounded-xl object-cover border border-white/10" />
+                ) : isVertical ? (
+                  <div className="relative w-full max-w-[260px] sm:max-w-[290px] aspect-[9/16] rounded-2xl overflow-hidden border-4 border-[#222226] bg-black shadow-2xl">
+                    <iframe src={project.videoUrl} title={project.title} className="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
+                  </div>
+                ) : (
+                  <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-black">
+                    <iframe src={project.videoUrl} title={project.title} className="w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen />
+                  </div>
+                )}
+              </div>
+
+              {/* Sidebar Info */}
+              <div className="p-5 sm:p-8 bg-[#111113] border-t lg:border-t-0 lg:border-l border-white/[0.08] flex flex-col justify-between">
+                <div>
+                  <span className="px-3 py-1 rounded-full bg-emerald/10 border border-emerald/20 text-xs font-mono text-emerald font-semibold">
+                    {project.type}
+                  </span>
+                  <h2 className="mt-3 sm:mt-4 text-xl sm:text-2xl font-bold text-[#F4F4F0]">{project.title}</h2>
+                  <p className="mt-2.5 text-xs sm:text-sm text-[#A1A1A8] leading-relaxed">{project.description}</p>
+                  
+                  <div className="mt-5 rounded-xl border border-white/[0.08] bg-white/[0.02] p-3.5 sm:p-4">
+                    <div className="font-mono text-[11px] uppercase text-[#8E8E93]">Documented Benchmark</div>
+                    <div className="mt-0.5 text-lg sm:text-xl font-bold text-emerald">{project.metrics}</div>
+                  </div>
+
+                  {project.deliverables && (
+                    <div className="mt-5">
+                      <div className="font-mono text-[11px] uppercase text-[#8E8E93] mb-2">Deliverables</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.deliverables.map((item, i) => (
+                          <span key={i} className="px-2.5 py-0.5 sm:py-1 rounded border border-white/10 bg-white/5 text-[11px] font-mono text-white/80">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                  <span className="font-mono text-xs text-[#8E8E93]">Beyond Forms Media</span>
+                  {driveViewUrl && (
+                    <a href={driveViewUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-emerald hover:underline">
+                      Open in Drive ↗
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       BOOKING MODAL
+       ═══════════════════════════════════════════════ */
+    function BookingModal({ isOpen, onClose }) {
+      if (!isOpen) return null;
+      return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-[#09090A]/95 backdrop-blur-xl overflow-y-auto">
+          <div className="relative w-full max-w-lg rounded-2xl bg-[#111113] border border-white/15 p-6 sm:p-8 text-center shadow-2xl my-auto">
+            <button onClick={onClose} className="absolute top-4 right-4 text-white/60 hover:text-white text-lg">✕</button>
+            <span className="px-3 py-1 rounded-full bg-emerald/10 text-emerald font-mono text-xs font-semibold">STRATEGY SESSION</span>
+            <h3 className="mt-3 text-xl sm:text-2xl font-bold text-[#F4F4F0]">Book a 30-Minute Architecture Call</h3>
+            <p className="mt-2 text-xs sm:text-sm text-[#A1A1A8]">We will review your retention curves, audit pacing, and blueprint your content engine.</p>
+            <div className="mt-5 space-y-3">
+              <input type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald" />
+              <input type="email" placeholder="Your Work Email" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald" />
+              <input type="text" placeholder="Channel / Brand Link" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-emerald" />
+              <button onClick={() => { alert("Thanks! We will be in touch within 24 hours."); onClose(); }} className="w-full py-3.5 rounded-xl bg-emerald text-carbon font-bold text-sm hover:bg-[#F4F4F0] transition-colors shadow-lg active:scale-98">
+                Submit Strategy Request ▷
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ */
+    function Footer() {
+      const [copied, setCopied] = useState(false);
+      const [time, setTime] = useState("");
+
+      useEffect(() => {
+        const updateTime = () => {
+          const now = new Date();
+          const h = String(now.getUTCHours()).padStart(2, '0');
+          const m = String(now.getUTCMinutes()).padStart(2, '0');
+          const s = String(now.getUTCSeconds()).padStart(2, '0');
+          setTime(h + ':' + m + ':' + s + ' UTC');
+        };
+        updateTime();
+        const interval = setInterval(updateTime, 1000);
+        return () => clearInterval(interval);
+      }, []);
+
+      const copyEmail = () => {
+        navigator.clipboard.writeText("hello@beyondformsmedia.com");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2200);
+      };
+
+      const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      return (
+        <footer id="footer" className="py-16 md:py-24 px-4 sm:px-6 md:px-12 bg-[#09090A] border-t border-white/[0.08]">
+          <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
+            <button onClick={scrollToTop} className="mb-6 font-mono text-xs uppercase tracking-widest text-[#8E8E93] hover:text-emerald transition-colors flex items-center gap-1">
+              <span>Back to top</span>
+              <span>↑</span>
+            </button>
+
+            <span className="font-mono text-xs uppercase tracking-widest text-emerald font-semibold">BEYOND FORMS MEDIA</span>
+            <h2 className="mt-3 text-3xl sm:text-6xl font-extrabold tracking-tight text-[#F4F4F0]">Ready to build something iconic?</h2>
+            
+            <button onClick={copyEmail} className="mt-6 px-5 sm:px-6 py-3 rounded-full border border-white/15 bg-white/5 font-mono text-xs sm:text-sm text-[#F4F4F0] hover:bg-white/10 hover:border-emerald/50 transition-colors">
+              {copied ? "✓ Copied to clipboard!" : "hello@beyondformsmedia.com (Click to Copy)"}
+            </button>
+
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-between w-full pt-8 border-t border-white/5 text-xs font-mono text-[#8E8E93] gap-3">
+              <div>&copy; {new Date().getFullYear()} Beyond Forms Media. All rights reserved.</div>
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse-dot" />
+                <span>STUDIO CLOCK: {time}</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      );
+    }
+
+    /* ═══════════════════════════════════════════════
+       ROOT APP
+       ═══════════════════════════════════════════════ */
+    function App() {
+      const [selectedProject, setSelectedProject] = useState(null);
+      const [isBookingOpen, setIsBookingOpen] = useState(false);
+
+      const openBooking = () => setIsBookingOpen(true);
+
+      return (
+        <div className="min-h-screen bg-[#09090A] text-[#F4F4F0]">
+          <Header onBookCall={openBooking} />
+          
+          <main className="w-full">
+            <Hero />
+            <AboutSection onBookCall={openBooking} />
+            <Marquee />
+            <SelectedWork onProjectClick={(p) => setSelectedProject(p)} />
+            <Services onBookCall={openBooking} />
+            <ProductionSystem />
+            <Testimonials />
+            <FAQ />
+            <Footer />
+          </main>
+
+          <ProjectModal project={selectedProject} isOpen={!!selectedProject} onClose={() => setSelectedProject(null)} />
+          <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
